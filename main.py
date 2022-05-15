@@ -14,7 +14,7 @@ GRID_SIZE = 9
 global NEW_NUMBERS_ADDED
 NEW_NUMBERS_ADDED = 0
 
-def DifficultyMode():
+def DifficultyMode() -> int:
     extra_help = 0
     inpt = str(input("Please choose your difficulty level, one of:\n\neasy\nmedium\nhard\n\nYour choice: ")).lower()
     while not inpt in ["easy", "medium", "hard"]:
@@ -25,8 +25,11 @@ def DifficultyMode():
         extra_help += 5
     return extra_help
 
-def getRandomRC():
-    """Returns a random row and column number\n\n@returns int[]"""
+def getRandomRC() -> list[int]:
+    """
+    Returns a random row and column number
+    @returns int[]
+    """
     code = ""
     i = 0
     while i < 2:
