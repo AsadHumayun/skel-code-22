@@ -6,22 +6,21 @@
 # Version number: 0.0.0
 
 import random
-from tokenize import Number
 
 EMPTY_STRING = ""
 SPACE = " "
-GRID_SIZE = 9 
+GRID_SIZE = 9
 global NEW_NUMBERS_ADDED
 NEW_NUMBERS_ADDED = 0
 
 def DifficultyMode() -> int:
     extra_help = 0
-    inpt = str(input("Please choose your difficulty level, one of:\n\neasy\nmedium\nhard\n\nYour choice: ")).lower()
-    while not inpt in ["easy", "medium", "hard"]:
-        inpt = str(input("Please choose your difficulty level, one of:\n\neasy\nmedium\nhard\n\nYour choice: ")).lower()
-    if inpt == "easy":
+    help_lvl = str(input("Please choose your difficulty level, one of:\n\neasy\nmedium\nhard\n\nYour choice: ")).lower()
+    while not help_lvl in ["easy", "medium", "hard"]:
+        help_lvl = str(input("Please choose your difficulty level, one of:\n\neasy\nmedium\nhard\n\nYour choice: ")).lower()
+    if help_lvl == "easy":
         extra_help += 15
-    elif inpt == "medium":
+    elif help_lvl == "medium":
         extra_help += 5
     return extra_help
 
@@ -66,9 +65,7 @@ def LoadPuzzleFile(PuzzleName, Puzzle):
         Line = 0
         FileIn = open(f"{PuzzleName}.txt", 'r')
         CellInfo = FileIn.readline()
-        print(f"CellInfo @ 63 {CellInfo}")
         CellInfo = CellInfo[:-1]
-        print(str(CellInfo))
         while CellInfo != EMPTY_STRING:
             Puzzle[Line] = CellInfo
             CellInfo = FileIn.readline()
@@ -87,16 +84,37 @@ def LoadPuzzleFile(PuzzleName, Puzzle):
     extraHelp = DifficultyMode()
     codes = []
     i = 0
-    for i in range(extraHelp - 1):
-        code = getRandomRC()
-        global NEW_NUMBERS_ADDED
+    for i in range(extraHelp):
+        code = getRandomRC() # [R, C]
+        global NEW_NUMBERS_ADDED # int
         NEW_NUMBERS_ADDED += 1
         Puzz = list(map(lambda cell: cell[0:2], Puzzle))
-        while code in Puzz or code in codes:
+        print("23r123r132r", str("".join(map(lambda x: str(x), code))))
+        while str("".join(map(lambda x: str(x), code))) in Puzz:
           code = getRandomRC()
+        print(f"Successfully appended \"{code}\" to codes")
         codes.append(code)
     print("Codes to reveal:")
     print(codes)
+
+    with open(f"{PuzzleName}S.txt", "r") as f:
+      # No need to account if the file is missing as
+      # this code would not have been reached if puzzle file is not present
+
+      lines: list[str] = f.readlines()
+      lines = list(map(lambda x: list(x), lines))
+      for code in codes:
+        Puzz = list(map(lambda cell: cell[0:2], Puzzle))
+        while str("".join(map(lambda x: str(x), code))) in Puzz:
+          code = getRandomRC()
+        for square in Puzzle:
+          if square != EMPTY_STRING:
+            continue
+          else:
+            Puzzle[Puzzle.index(square)] = f"{code[0]}{code[1]}{lines[code[0] - 1][code[1] - 1]}"
+            break
+            
+    print("Final Puzzle", Puzzle, sep="\n")
     return Puzzle, OK
 
 def LoadSolution(PuzzleName, Solution):
