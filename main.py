@@ -29,27 +29,10 @@ def getRandomRC() -> list[int]:
     Returns a random row and column number
     @returns int[]
     """
-    code = ""
-    i = 0
-    while i < 2:
-        if i == 1:
-            code += str(random.randint(1, 9))
-        else:
-            code += str(random.randint(1, 9)) + ";"
-        i += 1
-        '''
-Your choice: easy
-15 <class 'int'>
-0 <class 'int'>
-7;8 <class 'str'>
-['7', '8'] <class 'list'>
-        '''
-        # Python throws a tantrum if you attempt to split by ""...
-        # this is why I don't use python lol
-    code = code.split(";")
-    for x in code:
-        code[code.index(x)] = int(code[code.index(x)])
-    # original map(... lambda...) expression was cuasing issues, had to circumvent it.
+    code = []
+    for i in range(2):
+      code.append(random.randint(1, 9))
+    # GENERATED CODE:  [4, 9]
     return code
 
 
@@ -80,16 +63,25 @@ def LoadPuzzleFile(PuzzleName, Puzzle):
     except:
         print("Puzzle file does not exist")
         OK = False
-    '''(function) DifficultyMode: () -> Literal[15, 5, 0]'''
+    '''(function) DifficultyMode: () -> one of[15, 5, 0]'''
     extraHelp = DifficultyMode()
     codes = []
-    i = 0
     for i in range(extraHelp):
+        # getRandomRC() returns an array of random row and column digits
         code = getRandomRC() # [R, C]
+        # question told us to 
         global NEW_NUMBERS_ADDED # int
         NEW_NUMBERS_ADDED += 1
+        '''
+          cell = "123" # the row column digit number in the Puzzle variable
+          cell[0:2] returns "12" - it basically slices off the 3 from the string, because we only need/want the 
+          # random row/column digit.
+        '''
         Puzz = list(map(lambda cell: cell[0:2], Puzzle))
-        print("23r123r132r", str("".join(map(lambda x: str(x), code))))
+        ''''
+        str("".join(map(lambda x: str(x), code))) 
+        the above line loops through the code (code=[randomRow, randomColumn])
+        '''
         while str("".join(map(lambda x: str(x), code))) in Puzz:
           code = getRandomRC()
         print(f"Successfully appended \"{code}\" to codes")
@@ -103,6 +95,7 @@ def LoadPuzzleFile(PuzzleName, Puzzle):
 
       lines: list[str] = f.readlines()
       lines = list(map(lambda x: list(x), lines))
+
       for code in codes:
         Puzz = list(map(lambda cell: cell[0:2], Puzzle))
         while str("".join(map(lambda x: str(x), code))) in Puzz:
